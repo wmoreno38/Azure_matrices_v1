@@ -1,0 +1,16 @@
+{
+  "name": "linea15-api-azure",
+  "version": "3.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "func start",
+    "seed-admin": "node scripts/seed-admin.js"
+  },
+  "dependencies": {
+    "@azure/storage-blob": "^12.26.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.16",
+    "pg": "^8.13.3"
+  }
+}
