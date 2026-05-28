@@ -25,16 +25,16 @@ export async function getUser(req) {
   const payload = verifyToken(token);
   if (!payload?.userId) return null;
 
-  // Verificar que el usuario sigue activo en la BD
-  const user = await queryOne(
-    `SELECT id, username, name, email, role, active, project_perms,
-            failed_attempts, locked_until
-     FROM users WHERE id = $1`,
-    [payload.userId]
-  );
-
-  if (!user || !user.active) return null;
-  return user;
+  // Retornar directamente del token sin consultar BD
+  return {
+    id: payload.userId,
+    role: payload.role,
+    name: payload.name || 'Usuario',
+    username: payload.username || '',
+    email: payload.email || '',
+    active: true,
+    project_perms: {}
+  };
 }
 
 // ── Guards ─────────────────────────────────────────────────────────────────
