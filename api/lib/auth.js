@@ -19,7 +19,7 @@ export function verifyToken(token) {
 // ── Extraer usuario del token ──────────────────────────────────────────────
 export async function getUser(req) {
   const authHeader = req.headers['authorization'] || req.headers['Authorization'] || '';
-  const token = authHeader.replace('Bearer ', '').trim();
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
   if (!token) return null;
 
   const payload = verifyToken(token);
