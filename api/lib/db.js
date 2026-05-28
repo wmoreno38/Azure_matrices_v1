@@ -10,7 +10,7 @@ const pool = new Pool({
   user:     process.env.PG_USER,      // e.g. adminuser
   password: process.env.PG_PASSWORD,
   ssl: { rejectUnauthorized: false }, // requerido por Azure PostgreSQL
-  max: 10,
+  max: 1,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
 });
