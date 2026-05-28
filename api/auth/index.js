@@ -45,7 +45,13 @@ export default async function handler(context, req) {
     // Limpiar intentos fallidos
     await query('UPDATE users SET failed_attempts=0, locked_until=NULL WHERE id=$1', [user.id]);
 
-    const token = signToken({ userId: user.id, role: user.role });
+    const token = signToken({ 
+  userId: user.id, 
+  role: user.role,
+  name: user.name,
+  username: user.username,
+  email: user.email
+});
 
     await query(
       `INSERT INTO audit_logs (type, category, user_name, user_id, detail)
