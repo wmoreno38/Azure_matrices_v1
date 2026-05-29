@@ -25,7 +25,7 @@ jobs:
           node-version: '18'
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build frontend
         run: npm run build
@@ -43,7 +43,7 @@ jobs:
           api_location: "api"
           output_location: "dist"
           skip_app_build: true
-          skip_api_build: false
+          skip_api_build: true
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
