@@ -16,34 +16,30 @@ jobs:
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
 
       - name: Setup Node.js 18
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install frontend dependencies
-        run: npm install
-        working-directory: ./
+      - name: Install and Build frontend
+        run: |
+          npm install
+          npm run build
+          echo "=== dist contents ==="
+          ls -la dist/
+          echo "=== index.html ==="
+          cat dist/index.html
 
-      - name: Build frontend (Vite)
-        run: npm run build
-        working-directory: ./
-
-      - name: Verify dist exists
-        run: ls -la dist/
-
-      - name: Deploy to Azure Static Web Apps
+      - name: Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ICY_SEA_0F1E84E0F }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/"
+          app_location: "dist"
           api_location: "api"
-          output_location: "dist"
+          output_location: ""
           skip_app_build: true
           skip_api_build: false
 
@@ -57,3 +53,4 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ICY_SEA_0F1E84E0F }}
           action: "close"
+
