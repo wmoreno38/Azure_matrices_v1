@@ -1,12 +1,16 @@
 /**
- * Script para crear el primer usuario administrador
- * Ejecutar UNA SOLA VEZ después de crear la BD:
+ * Crear el primer usuario administrador.
+ * Ejecutar UNA SOLA VEZ después de crear las tablas en Neon:
  *
- *   PG_HOST=... PG_DATABASE=... PG_USER=... PG_PASSWORD=... node scripts/seed-admin.js
+ *   PG_HOST=ep-xxx.neon.tech PG_DATABASE=neondb PG_USER=neondb_owner \
+ *   PG_PASSWORD=xxx node scripts/seed-admin.js
+ *
+ * O con un archivo .env y dotenv instalado:
+ *   node --env-file=.env scripts/seed-admin.js
  */
 
 import bcrypt from 'bcryptjs';
-import pg from 'pg';
+import pg     from 'pg';
 
 const { Pool } = pg;
 
@@ -16,14 +20,14 @@ const pool = new Pool({
   database: process.env.PG_DATABASE,
   user:     process.env.PG_USER,
   password: process.env.PG_PASSWORD,
-  ssl: { rejectUnauthorized: false },
+  ssl:      { rejectUnauthorized: false },
 });
 
 const ADMIN = {
   username: 'admin',
   name:     'Administrador',
-  email:    'admin@tuorganizacion.com',   // ← cambia esto
-  password: 'CambiaEstaPassword123!',     // ← cambia esto
+  email:    process.env.ADMIN_EMAIL    || 'admin@linea15.com',
+  password: process.env.ADMIN_PASSWORD || 'CambiaEstaPassword123!',
   role:     'admin',
 };
 
@@ -31,17 +35,25 @@ async function main() {
   const client = await pool.connect();
   try {
     const hash = await bcrypt.hash(ADMIN.password, 12);
-    await client.query(
+    const result = await client.query(
       `INSERT INTO users (username, name, email, password_hash, role, active, project_perms)
        VALUES ($1, $2, $3, $4, 'admin', true, '{}')
-       ON CONFLICT (email) DO NOTHING`,
+       ON CONFLICT (email) DO UPDATE SET
+         password_hash = EXCLUDED.password_hash,
+         active = true
+       RETURNING id, email`,
       [ADMIN.username, ADMIN.name, ADMIN.email, hash]
     );
-    console.log('✅ Usuario admin creado:', ADMIN.email);
+    console.log('✅ Usuario admin listo:', result.rows[0].email);
+    console.log('   Email:    ', ADMIN.email);
+    console.log('   Password: ', ADMIN.password);
   } finally {
     client.release();
     await pool.end();
   }
 }
 
-main().catch(err => { console.error('❌ Error:', err.message); process.exit(1); });
+main().catch(err => {
+  console.error('❌ Error:', err.message);
+  process.exit(1);
+});
