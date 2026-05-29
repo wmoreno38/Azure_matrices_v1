@@ -14,17 +14,24 @@ export function verifyToken(token) {
   }
 }
 
+// Lee el token de varias fuentes (Azure SWA intercepta Authorization)
 function getAuthHeader(req) {
   if (!req?.headers) return '';
-  if (typeof req.headers.get === 'function') {
-    return req.headers.get('authorization') || req.headers.get('Authorization') || '';
-  }
-  return req.headers['authorization'] || req.headers['Authorization'] || '';
+  const get = (name) => {
+    if (typeof req.headers.get === 'function') {
+      return req.headers.get(name) || req.headers.get(name.toLowerCase()) || '';
+    }
+    return req.headers[name] || req.headers[name.toLowerCase()] || '';
+  };
+  // Prioridad: header propio que SWA no toca, luego Authorization
+  const custom = get('x-auth-token');
+  if (custom) return custom;
+  return get('Authorization');
 }
 
 export function getUser(req) {
-  const authHeader = getAuthHeader(req);
-  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const raw = getAuthHeader(req);
+  const token = raw.replace(/^Bearer\s+/i, '').trim();
   if (!token) return null;
   const payload = verifyToken(token);
   if (!payload?.userId) return null;
@@ -54,7 +61,7 @@ export function requireAdmin(req) {
 const CORS = {
   'Access-Control-Allow-Origin':  process.env.FRONTEND_URL || '*',
   'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type,Authorization,x-auth-token',
   'Content-Type': 'application/json',
 };
 
