@@ -7,7 +7,11 @@ function getToken() {
 async function req(method, path, body, opts = {}) {
   const headers = { 'Content-Type': 'application/json' };
   const token = getToken();
-  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (token) {
+    // Azure SWA intercepta 'Authorization', usamos un header propio
+    headers['x-auth-token'] = token;
+    headers['Authorization'] = `Bearer ${token}`;
+  }
 
   const res = await fetch(`${BASE}${path}`, {
     method,
