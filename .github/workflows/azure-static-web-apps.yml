@@ -22,14 +22,24 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Run admin seed
+        run: |
+          cd api
+          npm install
+          node scripts/seed-admin.js
+        env:
+          PG_HOST: ep-crimson-frog-apm16xqv.c-7.us-east-1.aws.neon.tech
+          PG_PORT: "5432"
+          PG_DATABASE: neondb
+          PG_USER: neondb_owner
+          PG_PASSWORD: npg_XD1CtcZrd4Av
+          ADMIN_EMAIL: admin@linea15.com
+          ADMIN_PASSWORD: Admin123456!
+
       - name: Install and Build frontend
         run: |
           npm install
           npm run build
-          echo "=== dist contents ==="
-          ls -la dist/
-          echo "=== index.html ==="
-          cat dist/index.html
 
       - name: Deploy
         uses: Azure/static-web-apps-deploy@v1
@@ -53,4 +63,3 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ICY_SEA_0F1E84E0F }}
           action: "close"
-
