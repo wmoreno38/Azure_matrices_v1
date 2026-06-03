@@ -298,19 +298,21 @@ function EditRolModal({ user, onSave, onClose }) {
 }
 
 function PermsModal({ user, projects, onSave, onClose }) {
-  const rawPerms = user.projectPerms || {};
+  const buildMods = (rawPerms) => {
+    const mods = {};
+    ASSIGNABLE_MODULES.forEach(m => { mods[m.key] = rawPerms['_mod_'+m.key] === true; });
+    return mods;
+  };
 
-  // Estado inicial: módulos (desde _mod_ prefijos)
-  const initMods = {};
-  ASSIGNABLE_MODULES.forEach(m => {
-    initMods[m.key] = rawPerms['_mod_'+m.key] === true;
-  });
+  const [modPerms, setModPerms] = useState(() => buildMods(user.projectPerms || {}));
+  const [projPerms, setProjPerms] = useState(() => extractProjectPerms(user.projectPerms || {}));
 
-  // Estado inicial: proyectos
-  const initProj = extractProjectPerms(rawPerms);
-
-  const [modPerms, setModPerms] = useState(initMods);
-  const [projPerms, setProjPerms] = useState(initProj);
+  // FIX: reinicializar cuando el admin abre permisos de otro usuario
+  useEffect(() => {
+    const raw = user.projectPerms || {};
+    setModPerms(buildMods(raw));
+    setProjPerms(extractProjectPerms(raw));
+  }, [user.id]);
 
   const toggleMod = key => setModPerms(p => ({ ...p, [key]: !p[key] }));
   const setAccess = (pid, level) => setProjPerms(p => ({ ...p, [pid]: level }));
