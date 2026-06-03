@@ -11,6 +11,8 @@ import Reports from './pages/Reports.jsx';
 import Logs from './pages/Logs.jsx';
 import Archive from './pages/Archive.jsx';
 import Users from './pages/Users.jsx';
+import Profile from './pages/Profile.jsx';
+import Matrices from './pages/Matrices.jsx';
 
 export default function App() {
   return (
@@ -19,34 +21,16 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route
-            element={
-              <PrivateRoute>
-                <Layout />
-              </PrivateRoute>
-            }
-          >
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:id" element={<ProjectDetail />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/archive" element={<Archive />} />
-            <Route
-              path="/logs"
-              element={
-                <PrivateRoute adminOnly>
-                  <Logs />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/users"
-              element={
-                <PrivateRoute adminOnly>
-                  <Users />
-                </PrivateRoute>
-              }
-            />
+          <Route element={<PrivateRoute><Layout /></PrivateRoute>}>
+            <Route path="/dashboard"       element={<Dashboard />} />
+            <Route path="/projects"        element={<Projects />} />
+            <Route path="/projects/:id"    element={<ProjectDetail />} />
+            <Route path="/reports"         element={<Reports />} />
+            <Route path="/archive"         element={<Archive />} />
+            <Route path="/profile"         element={<Profile />} />
+            <Route path="/logs"  element={<PrivateRoute adminOnly><Logs /></PrivateRoute>} />
+            <Route path="/users" element={<PrivateRoute adminOnly><Users /></PrivateRoute>} />
+            <Route path="/matrices" element={<PrivateRoute adminOnly><Matrices /></PrivateRoute>} />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

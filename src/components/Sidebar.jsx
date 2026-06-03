@@ -16,8 +16,9 @@ const ALL_NAV = [
 ];
 
 const ALL_ADMIN = [
-  { to:'/logs',  label:'Auditoría', module:'logs',  icon:'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8' },
-  { to:'/users', label:'Usuarios',  module:'users', icon:'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75' },
+  { to:'/matrices', label:'Matrices',  module:'users', icon:['M9 17H7A5 5 0 017 7h2','M15 7h2a5 5 0 010 10h-2','M9 12h6'] },
+  { to:'/logs',     label:'Auditoría', module:'logs',  icon:'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8' },
+  { to:'/users',    label:'Usuarios',  module:'users', icon:'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75' },
 ];
 
 export default function Sidebar({ open, onClose }) {
@@ -34,7 +35,6 @@ export default function Sidebar({ open, onClose }) {
     analista: 'Analista', auditor: 'Auditor', viewer: 'Solo lectura',
   }[user?.role] || user?.role;
 
-  // Filtrar nav items según permisos del usuario
   const visibleNav   = ALL_NAV.filter(item => canSeeModule(user, item.module));
   const visibleAdmin = ALL_ADMIN.filter(item => canSeeModule(user, item.module));
 
@@ -52,7 +52,7 @@ export default function Sidebar({ open, onClose }) {
         <span>Gestión de Riesgos TI</span>
       </div>
 
-      {/* Navegación filtrada */}
+      {/* Navegación */}
       <nav className="sidebar-nav">
         {visibleNav.length > 0 && (
           <div className="nav-section">
@@ -61,8 +61,7 @@ export default function Sidebar({ open, onClose }) {
               <NavLink key={item.to} to={item.to}
                 className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                 onClick={onClose}>
-                <Icon d={item.icon} />
-                {item.label}
+                <Icon d={item.icon}/>{item.label}
               </NavLink>
             ))}
           </div>
@@ -75,23 +74,26 @@ export default function Sidebar({ open, onClose }) {
               <NavLink key={item.to} to={item.to}
                 className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                 onClick={onClose}>
-                <Icon d={item.icon} />
-                {item.label}
+                <Icon d={item.icon}/>{item.label}
               </NavLink>
             ))}
           </div>
         )}
       </nav>
 
-      {/* Footer usuario */}
+      {/* Footer usuario — clic en avatar → /profile */}
       <div className="sidebar-footer">
-        <div className="user-badge">
-          <div className="user-avatar">{initials}</div>
+        <NavLink to="/profile" onClick={onClose} style={{textDecoration:'none'}}
+          className={({isActive})=>`user-badge${isActive?' user-badge-active':''}`}>
+          <div className="user-avatar" style={{cursor:'pointer',transition:'opacity .15s'}}>{initials}</div>
           <div className="user-info">
             <div className="user-name">{user?.name || user?.username}</div>
-            <div className="user-role">{roleLabel}</div>
+            <div className="user-role" style={{display:'flex',alignItems:'center',gap:4}}>
+              {roleLabel}
+              <span style={{fontSize:'.6rem',opacity:.5,marginLeft:2}}>· editar</span>
+            </div>
           </div>
-        </div>
+        </NavLink>
         <button className="btn btn-ghost btn-sm btn-logout w-full" onClick={handleLogout}
           style={{ color:'rgba(255,255,255,.55)', justifyContent:'center', marginTop:4 }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
