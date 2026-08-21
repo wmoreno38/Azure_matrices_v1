@@ -36,8 +36,8 @@
   --text-light:    #9CA3AF;   /* Texto deshabilitado */
 
   /* ── Sidebar naranja Porvenir ── */
-  --sidebar-bg:    #FC802A;   /* Naranja sólido como el sitio */
-  --sidebar-dark:  #E06010;   /* Sección más oscura */
+  --sidebar-bg: #507C13; /* Verde forest Porvenir */
+  --sidebar-dark: #3A5C0D; /* Verde oscuro hover */
 
   /* ── Semánticos ── */
   --success:       #507C13;   /* Verde Porvenir (forest) */
@@ -82,13 +82,13 @@ body {
 .sidebar {
   width: var(--sidebar-width);
   min-height: 100vh;
-  background: linear-gradient(180deg, #FC802A 0%, #E8620E 100%);
+  background: linear-gradient(180deg, #87A62E 0%, #507C13 100%);
   color: #fff;
   display: flex; flex-direction: column;
   position: fixed; top: 0; left: 0; bottom: 0;
   z-index: 100;
   transition: transform .25s ease;
-  box-shadow: 3px 0 20px rgba(252,128,42,.18);
+  box-shadow: 3px 0 20px rgba(80,124,19,.18);
 }
 
 .sidebar-logo {
@@ -370,9 +370,9 @@ tr:hover td { background: #FFFBF7; }
 .tab.active { color: var(--orange); border-bottom-color: var(--orange); font-weight: 700; }
 
 /* ═══ LOGIN — fondo blanco + panel naranja ══════════════════ */
-.login-page      { min-height: 100vh; display: grid; grid-template-columns: 42fr 58fr; }
+.login-page { min-height: 100vh; display: grid; grid-template-columns: 42fr 58fr; }
 .login-brand {
-  background: linear-gradient(160deg, #FC802A 0%, #E8620E 55%, #C84C00 100%);
+  background: linear-gradient(160deg, #87A62E 0%, #507C13 55%, #3A5C0D 100%);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   padding: 48px 40px; position: relative; overflow: hidden;
