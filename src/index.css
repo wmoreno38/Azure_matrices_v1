@@ -218,19 +218,19 @@ body {
 .btn:disabled { opacity: .5; cursor: not-allowed; }
 .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-/* Naranja primario — igual al botón "Iniciar sesión" del sitio */
+/* Verde primario — acorde al nuevo tema Porvenir */
 .btn-primary {
-  background: var(--orange); color: #fff;
-  box-shadow: 0 2px 8px rgba(252,128,42,.3);
+  background: var(--forest); color: #fff;
+  box-shadow: 0 2px 8px rgba(80,124,19,.3);
 }
 .btn-primary:hover:not(:disabled) {
-  background: var(--orange-dark);
-  box-shadow: 0 4px 14px rgba(252,128,42,.4);
+  background: #3A5C0D;
+  box-shadow: 0 4px 14px rgba(80,124,19,.4);
   transform: translateY(-1px);
 }
 
 .btn-secondary { background: var(--bg-alt); color: var(--text); border: 1.5px solid var(--border); }
-.btn-secondary:hover:not(:disabled) { background: var(--bg-subtle); border-color: var(--orange); color: var(--orange); }
+.btn-secondary:hover:not(:disabled) { background: var(--bg-subtle); border-color: var(--forest); color: var(--forest); }
 
 .btn-danger { background: var(--danger); color: #fff; }
 .btn-danger:hover:not(:disabled) { background: #8B1A14; box-shadow: 0 4px 12px rgba(176,53,46,.3); }
